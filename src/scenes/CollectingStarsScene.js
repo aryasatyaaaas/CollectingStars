@@ -12,6 +12,7 @@ export default class CollectingStarsScene extends Phaser.Scene {
         this.cursor = undefined;
         this.scoreText = undefined;
         this.score = 0;
+        this.bombs = undefined;
     }
 
     preload() {
@@ -87,6 +88,19 @@ export default class CollectingStarsScene extends Phaser.Scene {
             fontSize: '32px',
             fill: 'yellow'
         });
+        this.bombs = this.physics.add.group({
+            key: 'bomb',
+            repeat: 5,
+            setXY: {x:30, y:0, stepX:120}
+        })
+        this.physics.add.collider(this.bombs, this.platforms)
+        this.physics.add.overlap(
+            this.player,
+            this.bombs,
+            this.gameOver,
+            null,
+            this
+            )
     }
 
     update() {
@@ -120,4 +134,10 @@ export default class CollectingStarsScene extends Phaser.Scene {
             });
         }
     };
+    gameOver(player, bomb) {
+        this.physics.pause()
+        this.add.text(300,300, 'Game Over!!', {
+            fontSize: '48px', fill: 'yellow'
+        })
+    }
 }
